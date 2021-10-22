@@ -17,7 +17,7 @@
     function init() {
         window.addEventListener("resize", throttled(handleResize));
         window.addEventListener("mousemove", throttled(handleMouseMove));
-        window.addEventListener("touchmove", throttled(handleTouchEvent));
+        window.addEventListener("touchmove", handleTouchEvent);
         handleResize();
     }
 
