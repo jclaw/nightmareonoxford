@@ -19,10 +19,10 @@
         window.addEventListener("mousemove", throttled(handleMouseMove));
         window.addEventListener("touchmove", throttled(handleTouchEvent));
         handleResize();
-        console.log("init");
     }
 
     function handleTouchEvent(event) {
+        event.preventDefault();
         let touch = event.changedTouches[0];
         handleMouseMove(touch);
     }
