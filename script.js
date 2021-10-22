@@ -17,12 +17,11 @@
     function init() {
         window.addEventListener("resize", throttled(handleResize));
         window.addEventListener("mousemove", throttled(handleMouseMove));
-        window.addEventListener("touchmove", handleTouchEvent);
+        window.addEventListener("touchmove", throttled(handleTouchEvent));
         handleResize();
     }
 
     function handleTouchEvent(event) {
-        event.preventDefault();
         let touch = event.changedTouches[0];
         handleMouseMove(touch);
     }

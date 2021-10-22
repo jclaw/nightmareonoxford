@@ -8,6 +8,7 @@ body {
     overflow: hidden;
     color: var(--fg);
     font-family: 'Creepster', cursive;
+    margin: 0;
 }
 section#text {
     position: absolute;
