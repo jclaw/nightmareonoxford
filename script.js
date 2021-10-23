@@ -14,7 +14,7 @@
         let boxMan;
         let dragging = false;
         let startX;
-        let flashPoint = -38;
+        let flashPoint = -40;
 
         return {init: init};
 
@@ -38,7 +38,7 @@
             } else if (dragging && (event.type === "pointermove" || event.type === "touchmove")) {
                 clientX = event.clientX || event.touches[0].clientX;
                 let log = Math.log(dragging - clientX);
-                log = log > 0 ? log * -6 : 0;
+                log = log > 0 ? log * -7 : 0;
 
                 if (log < flashPoint) {
                     dragging = null;
