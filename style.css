@@ -51,6 +51,25 @@ section#text p:last-child {
 }
 
 
+section#images .boxman {
+    z-index: 1;
+    position: absolute;
+    top: 300px;
+    right: 0;
+    margin-right: -6px;
+    transform: translateX(40px);
+    transition: transform 0.1s ease-out;
+}
+section#images .boxman.flash {
+    transform: scale(4) translateX(-38px);
+    /*transition: transform 2s;*/
+}
+/*section#images .boxman:hover {
+    transform: translateX(0px);
+    transition: transform 0.2s ease-out;
+}*/
+
+
 .eye {
     --pupil-x: 0;
     --pupil-y: 0;
