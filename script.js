@@ -15,6 +15,7 @@
         let dragging = false;
         let startX;
         let flashPoint = -40;
+        let shaker;
 
         return {init: init};
 
@@ -27,6 +28,7 @@
                 window.addEventListener("pointerup", throttled(handleDrag));
                 window.addEventListener("touchmove", throttled(handleDrag));
                 window.addEventListener("touchend", throttled(handleDrag));
+                shaker = new Shaker(document.querySelector('#images'));
             });
         }
 
@@ -35,23 +37,76 @@
             if (event.type === "pointerdown" && event.target === boxMan) {
                 event.preventDefault();
                 dragging = event.clientX;
+                shaker.start();
             } else if (dragging && (event.type === "pointermove" || event.type === "touchmove")) {
                 clientX = event.clientX || event.touches[0].clientX;
-                let log = Math.log(dragging - clientX);
+                let diff = dragging - clientX;
+                let log = Math.log(diff);
                 log = log > 0 ? log * -7 : 0;
 
                 if (log < flashPoint) {
                     dragging = null;
                     boxMan.style.transform = null;
                     boxMan.classList.add('flash');
+                    shaker.stop();
                 } else {
-                    let diff = log + startX;
-                    boxMan.style.transform = `translateX(${diff}px)`;
+                    boxMan.style.transform = `translateX(${log + startX}px)`;
+                    shaker.setShakeAmount((diff ^ 2) / 1000);
                 }
 
             } else if (dragging && (event.type === "pointerup" || event.type === "touchend")) {
                 dragging = null;
                 boxMan.style.transform = null;
+                shaker.stop();
+            }
+        }
+
+        function Shaker(el) {
+            let running = true;
+            let amount = 1;
+            let prevTimeStamp;
+            let index = 0;
+            let incs = [
+                [ 1,  1,  0],
+                [-1, -2, -1],
+                [-3,  0,  1],
+                [ 3,  2,  0],
+                [ 1, -1,  1],
+                [-1,  2, -1],
+                [-3,  1,  0],
+                [ 3,  1, -1],
+                [-1, -1,  1],
+                [ 1,  2,  0],
+                [ 1, -2, -1],
+            ];
+
+            return {setShakeAmount: setShakeAmount, stop: stop, start: start};
+
+            function setShakeAmount(n) {
+                amount = n;
+            }
+            function stop() {
+                running = false;
+                el.style.transform = null;
+            }
+            function start() {
+                running = true;
+                window.requestAnimationFrame(step);
+            }
+
+            function step(timestamp) {
+                if (!running) return;
+                if (prevTimeStamp === undefined) {
+                    prevTimeStamp = timestamp;
+                } else if (timestamp - prevTimeStamp < 10) {
+                    return window.requestAnimationFrame(step);
+                }
+
+                let inc = incs[index];
+                let str = `translate(${amount * inc[0]}px, ${amount * inc[1]}px) rotate(${amount * inc[2]}deg)`;
+                el.style.transform = str;
+                index = (index + 1 < incs.length) ? index + 1 : 0;
+                return window.requestAnimationFrame(step);
             }
         }
     }
